@@ -1,5 +1,6 @@
 package com.example;
 
+import ai.api.model.AIOriginalRequest;
 import ai.api.model.AIRequest;
 import ai.api.model.Fulfillment;
 import org.slf4j.Logger;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.Optional;
+
+import static com.example.JsonUtils.*;
 
 @RestController
 public class MyShopDialogflowWebhookController {
@@ -23,7 +27,7 @@ public class MyShopDialogflowWebhookController {
 
     @PostMapping("/webhook")
     public Fulfillment webhook(@RequestBody AIRequest request) {
-        logger.debug("request : " + request);
+        logger.debug("request : " + toJson(request));
         String userAccessToken = getUserAccessToken(request);
 
         myShopService.placeOrder(getAuthorizationHeader(userAccessToken));
@@ -35,9 +39,13 @@ public class MyShopDialogflowWebhookController {
         return response;
     }
 
-    private String getUserAccessToken(@RequestBody AIRequest request) {
-        Map userDetails = (Map) request.getOriginalRequest().getData().get("user");
-        return String.valueOf(userDetails.get("access_token"));
+    private String getUserAccessToken(AIRequest request) {
+        return Optional.ofNullable(request.getOriginalRequest())
+                .map(AIOriginalRequest::getData)
+                .map(data -> data.get("user"))
+                .map(user -> ((Map) user).get("access_token"))
+                .map(String::valueOf)
+                .orElseThrow(() -> new RuntimeException(String.format("Cannot find user access_token in request")));
     }
 
     private String getAuthorizationHeader(String userAccessToken) {
