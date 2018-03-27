@@ -43,9 +43,9 @@ public class MyShopDialogflowWebhookController {
         return Optional.ofNullable(request.getOriginalRequest())
                 .map(AIOriginalRequest::getData)
                 .map(data -> data.get("user"))
-                .map(user -> ((Map) user).get("access_token"))
+                .map(user -> ((Map) user).get("accessToken"))
                 .map(String::valueOf)
-                .orElseThrow(() -> new RuntimeException(String.format("Cannot find user access_token in request")));
+                .orElseThrow(() -> new RuntimeException(String.format("Cannot find user accessToken in request")));
     }
 
     private String getAuthorizationHeader(String userAccessToken) {

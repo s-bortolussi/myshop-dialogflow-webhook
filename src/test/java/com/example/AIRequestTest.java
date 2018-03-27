@@ -25,7 +25,7 @@ public class AIRequestTest {
         String content = JsonUtils.asJson("fulfillement_request.json");
         //can deserialize user access token ?
         assertThat((Map) this.json.parseObject(content).getOriginalRequest().getData().get("user"))
-                .containsOnly(entry("access_token","1234"),entry("user_id","aaaaaa"));
+                .containsOnly(entry("accessToken","1234"),entry("userId","aaaaaa"));
 
     }
 }

@@ -2,8 +2,8 @@
   "originalRequest": {
     "data": {
         "user": {
-            "user_id": "aaaaaa",
-            "access_token": "1234"
+            "userId": "aaaaaa",
+            "accessToken": "1234"
         }
     }
   },
